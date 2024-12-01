@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: product-catalog-management
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 9457
+  jpa:
+    database: POSTGRESQL
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: update
+        show-sql: true
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+  servlet:
+    multipart:
+      max-file-size: 1TB
+      max-request-size: 1TB
+
+server:
+  servlet:
+    context-path: "/productCatalogManagement/v1"
+
+logging:
+  level:
+    root: INFO
+    springframework: INFO
+
+file:
+  save:
+    location: "src/main/resources/static/csv/new"
+  move:
+    location: "src/main/resources/static/csv/outdated"

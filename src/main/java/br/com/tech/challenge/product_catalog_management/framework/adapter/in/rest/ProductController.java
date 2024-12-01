@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/product")
 @Slf4j
-public class ProductController {
+public class ProductController implements ProductControllerAPI {
 
 	@Autowired
 	ProductServiceUseCase useCase;
@@ -35,7 +32,7 @@ public class ProductController {
 	@Value("${file.save.location}")
 	private String directory;
 
-	@PostMapping
+	@Override
 	public ResponseEntity<Void> uploadCsvFile(@RequestParam("file") MultipartFile file) {
 		try {
 			useCase.saveFile(new FileDTO("product-data.csv", directory, file.getBytes()));
@@ -47,18 +44,18 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping
+	@Override
 	public ResponseEntity<List<ProductDTO>> searchProductsByBrandAndGender(@RequestParam String brand,
 			@RequestParam char gender) {
 		return ResponseEntity.ok(useCase.searchProductsByBrandAndGender(brand, gender));
 	}
 
-	@GetMapping("/{idProduct}")
+	@Override
 	public ResponseEntity<ProductDTO> searchProduct(@PathVariable Long id) {
 		return ResponseEntity.ok(useCase.searchProductById(id));
 	}
 
-	@PutMapping("/{idProduct}")
+	@Override
 	public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductDTO body) {
 		useCase.updateProduct(id, body);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
